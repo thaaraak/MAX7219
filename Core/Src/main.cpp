@@ -23,6 +23,9 @@
 #include "spi.h"
 #include "gpio.h"
 
+#include <string.h>
+#include <stdio.h>
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -98,14 +101,24 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   MAX7219 max7219( &hspi1, GPIOA, GPIO_PIN_3);
+  max7219.Begin();
+
+  char b[20];
+  sprintf(b, "%02d.%02d.%02d", 1, 2, 3 );
+  max7219.DisplayText(b, JUSTIFY_RIGHT);
+  HAL_Delay(5000);
+
+  max7219.MAX7219_DisplayTestStart();
+  HAL_Delay(5000);
+  max7219.MAX7219_DisplayTestStop();
+
+  int cnt = 0;
 
   while (1)
   {
-	  max7219.Clear();
-	  max7219.DisplayText("HELLO", JUSTIFY_RIGHT);
-	  HAL_Delay(1000);
-	  max7219.DisplayText("JELLO", JUSTIFY_RIGHT);
-	  HAL_Delay(1000);
+
+	  sprintf(b, "%07d", cnt++ );
+	  max7219.DisplayText(b, JUSTIFY_RIGHT);
 
     /* USER CODE END WHILE */
 
